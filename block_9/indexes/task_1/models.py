@@ -1,6 +1,8 @@
+from django.contrib.postgres.indexes import GinIndex, GistIndex
 from django.db import (
     models,
 )
+from django.db.models import Index
 
 
 class Employee(models.Model):
@@ -19,3 +21,10 @@ class Employee(models.Model):
 
     class Meta:
         db_table = 'indexes_employees'
+        index_together = (('fname', 'iname', 'oname'), )
+        indexes = [
+            Index(fields=['fname', 'iname', 'oname'], name='name_index'),
+            GistIndex(fields=['begin', 'end'], name='begin_end_index'),
+            GinIndex(fields=['country'], name='country_index'),
+            GinIndex(fields=['additional_info'], name='additional_info_gin_index')
+        ]
